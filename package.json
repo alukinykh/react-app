@@ -5,7 +5,7 @@
   "author": "Anna Lukinykh",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "NODE_ENV=development webpack-dev-server"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -14,12 +14,18 @@
     "babel-preset-es2017": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "html-webpack-plugin": "^2.30.1",
+    "react-router-dom": "^4.2.2",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.2.0",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
+    "babel-preset-stage-3": "^6.24.1",
     "react": "^16.1.1",
-    "react-dom": "^16.1.1"
+    "react-dom": "^16.1.1",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2"
   }
 }
