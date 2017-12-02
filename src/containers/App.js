@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { HashRouter, Switch, Router, Route, Redirect, } from 'react-router-dom'
 
 
 import { connectedRouterRedirect } from 'redux-auth-wrapper/history4/redirect'
 import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper'
 
-import Login from './containers/Login'
+import Login from './Login'
 
 const Loading = () => (
     <div>Loading</div>
@@ -20,25 +21,20 @@ const userIsNotAuthenticated = connectedRouterRedirect({
    allowRedirectBack: false,
     // If selector is true, wrapper will not redirect
     // So if there is no user data, then we show the page
-   authenticatedSelector: state => state.user.data === null,
+   authenticatedSelector: state => state.login.data === null,
    // A nice display name for this check
    wrapperDisplayName: 'UserIsNotAuthenticated'
 })
 
 const userIsAuthenticated = connectedRouterRedirect({
     redirectPath: '/login',
-    authenticatedSelector: state => state.user.data !== null,
+    authenticatedSelector: state => state.login.data !== null,
     wrapperDisplayName: 'UserIsAuthenticated',
     // Returns true if the user auth state is loading
-    authenticatingSelector: state => state.user.isLoading,
+    authenticatingSelector: state => state.login.isLoading,
     // Render this component when the authenticatingSelector returns true
     AuthenticatingComponent: Loading
 })
-
-
-// const Login = () => (
-//     <div>Login</div>
-// )
 
 const Register = () => (
     <div>Login</div>
@@ -48,15 +44,21 @@ const Account = () => (
     <div>Account</div>
 )
 
-const App = () => (
-    <HashRouter>
-        <div>
-            <Route path="/login" component={userIsNotAuthenticated(Login)}/>
-            <Route path="/register" component={Register}/>
-            <Route path="/account" component={userIsAuthenticated(Account)}/>
-        </div>
-    </HashRouter>
-    
-)
+class App extends Component {
+    render() {
+        return (
+            <HashRouter>
+                <div>
+                    <Route path="/login" component={userIsNotAuthenticated(Login)}/>
+                    <Route path="/account" component={userIsAuthenticated(Account)}/>
+                </div>
+            </HashRouter>
+        )
+    }
+}
 
-export default App
+const mapStateToProps = state => ({
+    user: state.login
+})
+
+export default connect(mapStateToProps)(App)

@@ -4,22 +4,36 @@ import thunk from 'redux-thunk'
 import createHistory from 'history/createBrowserHistory'
 import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
 import { reducer as formReducer } from 'redux-form'
-import * as reducers from '../reducers'
+// import * as reducers from '../reducers'
+import login from '../reducers/login'
 
 const history = createHistory()
 
 const routingMiddleware = routerMiddleware(history)
 const reducer = combineReducers({
-  ...reducers,
+  login,
   routing: routerReducer,
   form: formReducer,
 })
 
-const initialState = { }
+// eslint-disable-next-line no-underscore-dangle
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+const initialState = {}
 
 export default function configureStore(initialState) {
   const logger = createLogger()
-  const store = createStore(() => {}, {}, applyMiddleware(thunk, logger))
+  const store = createStore(
+        reducer, 
+        initialState,
+        composeEnhancers(
+            applyMiddleware(
+                logger,
+                routingMiddleware,
+                thunk,
+            ),
+        ),
+    )
 
   if (module.hot) {
     module.hot.accept('../reducers', () => {
